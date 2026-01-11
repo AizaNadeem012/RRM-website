@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Facebook, Instagram, Search, Star, ChevronDown } from "lucide-react";
+import {
+  Menu,
+  X,
+  Facebook,
+  Instagram,
+  Search,
+  Star,
+  ChevronDown,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -11,6 +19,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+
+/* ---------------- DATA ---------------- */
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -35,8 +45,11 @@ const navLinksAfter = [
   { href: "/contact", label: "Contact" },
 ];
 
+/* ---------------- COMPONENT ---------------- */
+
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
@@ -55,36 +68,32 @@ export function Header() {
     >
       <div className="container mx-auto px-4">
 
-        {/* TOP BAR — PURE WHITE (hidden on mobile) */}
-        <div className="hidden md:flex justify-between items-center py-2 bg-white text-gray-700 rounded-b-xl shadow-sm px-4">
-          <div className="flex items-center gap-4">
-            <a href="#" className="text-gray-600 hover:text-[#6A2FA3]">
-              <Facebook size={18} />
-            </a>
-            <a href="#" className="text-gray-600 hover:text-[#6A2FA3]">
-              <Instagram size={18} />
-            </a>
+        {/* TOP BAR (DESKTOP ONLY) */}
+        <div className="hidden md:flex justify-between items-center py-2 bg-white rounded-b-xl shadow-sm px-4">
+          <div className="flex items-center gap-4 text-gray-600">
+            <Facebook size={18} />
+            <Instagram size={18} />
           </div>
 
           <div className="relative w-64">
             <input
               type="text"
               placeholder="Search services..."
-              className="w-full pl-10 pr-4 py-2 rounded-md bg-gray-100 border border-gray-300 text-gray-700 placeholder-gray-500 focus:outline-none focus:border-[#6A2FA3]"
+              className="w-full pl-10 pr-4 py-2 rounded-md bg-gray-100 border text-sm"
             />
-            <Search className="absolute left-3 top-2.5 text-gray-500" size={18} />
+            <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
           </div>
         </div>
 
-        {/* MAIN NAVBAR */}
+        {/* MAIN BAR */}
         <div className="flex items-center justify-between h-16 md:h-20">
 
           {/* LOGO */}
-          <Link to="/" className="flex items-center gap-3">
+          <Link to="/" className="flex items-center">
             <img
               src="/logo.webp"
-              alt="R.R.M Logo"
-              className="h-16 md:h-20 w-auto object-contain drop-shadow-lg"
+              alt="Logo"
+              className="h-10 md:h-20 w-auto object-contain"
             />
           </Link>
 
@@ -95,36 +104,32 @@ export function Header() {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-md transition-all",
+                  "px-4 py-2 rounded-md text-sm transition",
                   location.pathname === link.href
-                    ? "text-[#D6B7FF] bg-[#6A2FA3]/20"
-                    : "text-gray-200 hover:text-[#D6B7FF] hover:bg-[#6A2FA3]/10"
+                    ? "bg-[#6A2FA3]/20 text-[#D6B7FF]"
+                    : "text-gray-200 hover:bg-[#6A2FA3]/10 hover:text-[#D6B7FF]"
                 )}
               >
                 {link.label}
               </Link>
             ))}
-            
-            {/* Services Dropdown */}
+
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent text-gray-200 hover:text-[#D6B7FF] hover:bg-[#6A2FA3]/10 data-[state=open]:text-[#D6B7FF] data-[state=open]:bg-[#6A2FA3]/20">
+                  <NavigationMenuTrigger className="bg-transparent text-gray-200">
                     Services
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-2 p-4">
-                      {servicePages.map((service) => (
-                        <li key={service.href}>
+                    <ul className="w-[320px] p-4 grid gap-2">
+                      {servicePages.map((s) => (
+                        <li key={s.href}>
                           <NavigationMenuLink asChild>
                             <Link
-                              to={service.href}
-                              className={cn(
-                                "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                                location.pathname === service.href && "bg-accent/50"
-                              )}
+                              to={s.href}
+                              className="block p-3 rounded-md hover:bg-accent text-sm"
                             >
-                              <div className="text-sm font-medium leading-none">{service.label}</div>
+                              {s.label}
                             </Link>
                           </NavigationMenuLink>
                         </li>
@@ -134,149 +139,112 @@ export function Header() {
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
-            
+
             {navLinksAfter.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
-                className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-md transition-all",
-                  location.pathname === link.href
-                    ? "text-[#D6B7FF] bg-[#6A2FA3]/20"
-                    : "text-gray-200 hover:text-[#D6B7FF] hover:bg-[#6A2FA3]/10"
-                )}
+                className="px-4 py-2 rounded-md text-sm text-gray-200 hover:bg-[#6A2FA3]/10"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          {/* Desktop Buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <Button
-              className="bg-gradient-to-r from-[#6A2FA3] to-[#8B45CC] text-white hover:scale-105 transition-transform shadow-lg"
-              asChild
-            >
+          {/* DESKTOP CTA */}
+          <div className="hidden md:flex gap-3">
+            <Button asChild className="bg-gradient-to-r from-[#6A2FA3] to-[#8B45CC]">
               <Link to="/contact">Get Free Quote</Link>
             </Button>
+          </div>
 
+          {/* MOBILE RIGHT */}
+          <div className="flex items-center gap-2 lg:hidden">
             <a
               href="https://share.google/QUZ3caSgzonO6nfct"
               target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-white text-gray-700 px-3 py-2 rounded-lg shadow hover:scale-105 transition-transform"
+              className="flex items-center gap-1 bg-white px-2 py-1 rounded-md shadow"
             >
-              <img src="/google-logo.png" alt="Google" className="h-5 w-5 object-contain" />
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="text-yellow-400" />
-                ))}
-              </div>
+              <img src="/google-logo.png" className="h-4 w-4" />
+              <Star size={12} className="text-yellow-400" />
+              <Star size={12} className="text-yellow-400" />
+              <Star size={12} className="text-yellow-400" />
             </a>
+
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-md bg-[#6A2FA3] text-white"
+            >
+              {isOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
           </div>
-
-          {/* MOBILE GOOGLE REVIEWS (visible next to hamburger) */}
-          <a
-            href="https://share.google/QUZ3caSgzonO6nfct"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 lg:hidden text-gray-700 bg-white px-2 py-1 rounded-lg shadow"
-          >
-            <img src="/google-logo.png" alt="Google" className="h-4 w-4 object-contain" />
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} size={12} className="text-yellow-400" />
-            ))}
-          </a>
-
-          {/* MOBILE MENU ICON */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-white"
-          >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
         </div>
 
-        {/* MOBILE DROPDOWN MENU */}
+        {/* MOBILE MENU */}
         <div
           className={cn(
-            "lg:hidden overflow-hidden transition-all",
-            isOpen ? "max-h-[600px] py-4" : "max-h-0"
+            "lg:hidden overflow-hidden transition-[max-height,opacity] duration-300",
+            isOpen ? "max-h-[1000px] opacity-100 pb-4" : "max-h-0 opacity-0"
           )}
         >
-          <div className="relative mb-4">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2 rounded-md bg-gray-100 text-gray-700 border border-gray-300"
-            />
-            <Search className="absolute left-3 top-2.5 text-gray-600" size={18} />
-          </div>
-
           <nav className="flex flex-col gap-1">
-            {navLinks.map((link) => (
+            {navLinks.map((l) => (
               <Link
-                key={link.href}
-                to={link.href}
+                key={l.href}
+                to={l.href}
                 onClick={() => setIsOpen(false)}
-                className="px-4 py-3 text-gray-200 rounded-md hover:bg-[#6A2FA3]/20 hover:text-[#D6B7FF]"
+                className="px-4 py-3 text-gray-200 hover:bg-[#6A2FA3]/20 rounded-md"
               >
-                {link.label}
+                {l.label}
               </Link>
             ))}
-            
-            {/* Mobile Services Submenu */}
-            <div className="border-t border-gray-600 my-2 pt-2">
-              <div className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Services
-              </div>
-              {servicePages.map((service) => (
-                <Link
-                  key={service.href}
-                  to={service.href}
-                  onClick={() => setIsOpen(false)}
-                  className="px-6 py-3 text-gray-200 rounded-md hover:bg-[#6A2FA3]/20 hover:text-[#D6B7FF] block"
-                >
-                  {service.label}
-                </Link>
-              ))}
-            </div>
-            
-            {navLinksAfter.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={() => setIsOpen(false)}
-                className="px-4 py-3 text-gray-200 rounded-md hover:bg-[#6A2FA3]/20 hover:text-[#D6B7FF]"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
 
-          {/* Mobile Buttons inside dropdown */}
-          <div className="flex flex-col gap-2 mt-4 px-4">
-            <Button
-              className="w-full bg-gradient-to-r from-[#6A2FA3] to-[#8B45CC] text-white shadow-lg"
-              asChild
+            {/* SERVICES TOGGLE */}
+            <button
+              onClick={() => setServicesOpen(!servicesOpen)}
+              className="flex justify-between items-center px-4 py-3 text-gray-200"
             >
-              <Link to="/contact">Get Free Quote</Link>
-            </Button>
+              Services
+              <ChevronDown
+                className={cn(
+                  "transition-transform",
+                  servicesOpen && "rotate-180"
+                )}
+              />
+            </button>
 
-            <a
-              href="https://share.google/QUZ3caSgzonO6nfct"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full bg-white text-gray-700 px-3 py-2 rounded-lg shadow hover:scale-105 transition-transform"
-            >
-              <img src="/google-logo.png" alt="Google" className="h-5 w-5 object-contain" />
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="text-yellow-400" />
+            {servicesOpen && (
+              <div className="pl-4">
+                {servicePages.map((s) => (
+                  <Link
+                    key={s.href}
+                    to={s.href}
+                    onClick={() => setIsOpen(false)}
+                    className="block px-4 py-2 text-sm text-gray-300 hover:text-white"
+                  >
+                    {s.label}
+                  </Link>
                 ))}
               </div>
-            </a>
-          </div>
+            )}
+
+            {navLinksAfter.map((l) => (
+              <Link
+                key={l.href}
+                to={l.href}
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-3 text-gray-200 hover:bg-[#6A2FA3]/20 rounded-md"
+              >
+                {l.label}
+              </Link>
+            ))}
+
+            <div className="px-4 pt-3">
+              <Button asChild className="w-full bg-gradient-to-r from-[#6A2FA3] to-[#8B45CC]">
+                <Link to="/contact">Get Free Quote</Link>
+              </Button>
+            </div>
+          </nav>
         </div>
       </div>
     </header>
